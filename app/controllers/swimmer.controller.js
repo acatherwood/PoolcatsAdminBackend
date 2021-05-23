@@ -1,6 +1,6 @@
 const db = require("../models");
 const Swimmer = db.swimmers;
-const swimmerStats = db.swimmerStats;
+const SwimmerStats = db.swimmerStats;
 const Op = db.Sequelize.Op;
 
 // Create and Save a new Swimmer
@@ -18,36 +18,70 @@ exports.create = (req, res) => {
     const swimmer = {
       first_name: req.body.first_name,
       last_name: req.body.last_name,
-      birthdate: req.body.birthdate 
-    };
+      birthdate: req.body.birthdate,
+      suitSize: req.body.suitSize
+    }
   
     // Save Swimmer in the database
     Swimmer.create(swimmer)
-      .then(data => {
-        res.send(data);
+      .then((swimmer) => {
+        res.send(swimmer);
+        console.log(">> Created swimmer: " + JSON.stringify(swimmer, null, 4));
+        return swimmer;
       })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while creating the Swimmer."
-        });
+      .catch((err) => {
+        console.log(">> Error while creating swimmer: ", err);
+      })
+
+      // .then(data => {
+      //   res.send(data);
+      // })
+      // .catch(err => {
+      //   res.status(500).send({
+      //     message:
+      //       err.message || "Some error occurred while creating the Swimmer."
+      //   });
+      // });
+  // };
+
+      // Create a Swimmer stats
+
+  //   const swimmerStats = {
+  //     suitSize: swimmer.suitSize,
+  //     swimmerId: swimmer.Id,
+  //   }
+  
+  // SwimmerStats.create = (swimmerStats)
+  // console.log("I made it")
+  //     .then((SwimmerStats) => {
+  //       // res.send(swimmerStats);
+  //       console.log(">> Created SwimmerStats: " + JSON.stringify(SwimmerStats, null, 4));
+  //       return SwimmerStats;
+  //     })
+  //     .catch((err) => {
+  //       console.log(">> Error while creating SwimmerStats: ", err);
+  //     });
+
+
+  exports.createSwimmerStats = (swimmerId, swimmerStats) => {
+    return SwimmerStats.create({
+      name: swimmerStats.name,
+      text: swimmerStats.text,
+      swimmerId: swimmerId,
+    })
+      .then((swimmerStats) => {
+        console.log(">> Created swimmerStats: " + JSON.stringify(swimmerStats, null, 4));
+        return swimmerStats;
+      })
+      .catch((err) => {
+        console.log(">> Error while creating swimmerStats: ", err);
       });
   };
 
-  exports.createSwimmerStats = (swimmerId, SwimmerStats) => {
-    return SwimmerStats.create({
-      name: SwimmerStats.name,
-      text: SwimmerStats.text,
-      swimmerId: swimmerId,
-    })
-      .then((SwimmerStats) => {
-        console.log(">> Created SwimmerStats: " + JSON.stringify(SwimmerStats, null, 4));
-        return SwimmerStats;
-      })
-      .catch((err) => {
-        console.log(">> Error while creating SwimmerStats: ", err);
-      });
-  };
+//end of method, dont delete me
+    }
+
+
 
 // Retrieve all Swimmers from the database.
 exports.findAll = (req, res) => {

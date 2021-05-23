@@ -1,12 +1,19 @@
+// const { SwimmerStats, Swimmer } = require(".");
+
 module.exports = (sequelize, DataTypes) => {
-    const swimmerStats = sequelize.define("swimmerStats", {
+    const SwimmerStats = sequelize.define("swimmerStats", {
       suitSize: {
         type: DataTypes.INTEGER
       },
       SuitType: {
         type: DataTypes.STRING
       }
-    });
-  
-    return swimmerStats;
+    }, { 
+      timestamps: false
+    })
+
+    return SwimmerStats;
   };
+
+
+

@@ -1,21 +1,18 @@
 module.exports = (sequelize, Sequelize) => {
     const Swimmer = sequelize.define("swimmer", {
-
-            // If don't want createdAt
-      // createdAt: false,
-
-      // // If don't want updatedAt
-      // updatedAt: false,
       first_name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       last_name: {
         type: Sequelize.STRING
       },
       birthdate: {
         type: Sequelize.DATEONLY
-      },
-    }, { timestamps: false});
+      }
+    }, { 
+        timestamps: false
+      });
   
     return Swimmer;
   };

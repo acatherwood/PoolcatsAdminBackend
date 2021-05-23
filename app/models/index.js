@@ -20,13 +20,13 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.swimmers = require("../models/swimmer.model.js")(sequelize, Sequelize);
-
 db.swimmerStats = require("../models/swimmerStats.model.js")(sequelize, Sequelize);
 
-db.swimmers.hasMany(db.swimmerStats, { as: "comments" });
+db.swimmers.hasMany(db.swimmerStats, { as: "swimmerStats" });
 db.swimmerStats.belongsTo(db.swimmers, {
   foreignKey: "swimmerId",
   as: "swimmer",
 });
+
 
 module.exports = db;
