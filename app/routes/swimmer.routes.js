@@ -9,8 +9,6 @@ module.exports = app => {
     // Retrieve all Swimmers
     router.get("/", swimmers.findAll);
   
-    // // Retrieve all published Swimmers
-    // router.get("/published", swimmers.findAllPublished);
   
     // Retrieve a single Swimmer with id
     router.get("/:id", swimmers.findOne);

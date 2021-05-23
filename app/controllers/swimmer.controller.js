@@ -1,92 +1,76 @@
 const db = require("../models");
 const Swimmer = db.swimmers;
 const SwimmerStats = db.swimmerStats;
-const Op = db.Sequelize.Op;
-
-// Create and Save a new Swimmer
-exports.create = (req, res) => {
-    // Validate request
-    if (!req.body.first_name) {
-      console.log("HIIIII" + req.body.first_name)
-      res.status(400).send({
-        message: "Content can not be empty!!!!!!!!!!!!!!!!!"
-      });
-      return;
-    }
-  
-    // Create a Swimmer
-    const swimmer = {
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
-      birthdate: req.body.birthdate,
-      suitSize: req.body.suitSize
-    }
-  
-    // Save Swimmer in the database
-    Swimmer.create(swimmer)
-      .then((swimmer) => {
-        res.send(swimmer);
-        console.log(">> Created swimmer: " + JSON.stringify(swimmer, null, 4));
-        return swimmer;
-      })
-      .catch((err) => {
-        console.log(">> Error while creating swimmer: ", err);
-      })
-
-      // .then(data => {
-      //   res.send(data);
-      // })
-      // .catch(err => {
-      //   res.status(500).send({
-      //     message:
-      //       err.message || "Some error occurred while creating the Swimmer."
-      //   });
-      // });
-  // };
-
-      // Create a Swimmer stats
-
-  //   const swimmerStats = {
-  //     suitSize: swimmer.suitSize,
-  //     swimmerId: swimmer.Id,
-  //   }
-  
-  // SwimmerStats.create = (swimmerStats)
-  // console.log("I made it")
-  //     .then((SwimmerStats) => {
-  //       // res.send(swimmerStats);
-  //       console.log(">> Created SwimmerStats: " + JSON.stringify(SwimmerStats, null, 4));
-  //       return SwimmerStats;
-  //     })
-  //     .catch((err) => {
-  //       console.log(">> Error while creating SwimmerStats: ", err);
-  //     });
 
 
-  exports.createSwimmerStats = (swimmerId, swimmerStats) => {
-    return SwimmerStats.create({
-      name: swimmerStats.name,
-      text: swimmerStats.text,
-      swimmerId: swimmerId,
+// Create and Save new Swimmers
+exports.create = (swimmer) => {
+  return Swimmer.create({
+    first_name: swimmer.first_name,
+    last_name: swimmer.last_name,
+  })
+    .then((swimmer) => {
+      console.log(">> Created swimmer: " + JSON.stringify(swimmer, null, 4));
+      return swimmer;
     })
-      .then((swimmerStats) => {
-        console.log(">> Created swimmerStats: " + JSON.stringify(swimmerStats, null, 4));
-        return swimmerStats;
-      })
-      .catch((err) => {
-        console.log(">> Error while creating swimmerStats: ", err);
-      });
-  };
+    .catch((err) => {
+      console.log(">> Error while creating swimmer: ", err);
+    });
+};
 
-//end of method, dont delete me
-    }
+// Create and Save new SwimmerStats
+exports.createSwimmerStat = (swimmerId, swimmerStats) => {
+  return SwimmerStats.create({
+    suitSize: swimmerStats.suitSize,
+    swimmerId: swimmerId,
+  })
+    .then((swimmerStats) => {
+      console.log(">> Created swimmerStat: " + JSON.stringify(swimmerStats, null, 4));
+      return swimmerStats;
+    })
+    .catch((err) => {
+      console.log(">> Error while creating swimmerStat: ", err);
+    });
+};
+
+// Get the swimmerStats for a given swimmer
+exports.findSwimmerById = (swimmerId) => {
+  return Swimmer.findByPk(swimmerId, { include: ["swimmerStats"] })
+    .then((swimmer) => {
+      return swimmer;
+    })
+    .catch((err) => {
+      console.log(">> Error while finding swimmer: ", err);
+    });
+};
+
+// Get the swimmerStats for a given swimmerStat id
+exports.findSwimmerStatById = (id) => {
+  return SwimmerStat.findByPk(id, { include: ["swimmer"] })
+    .then((swimmerStat) => {
+      return swimmerStat;
+    })
+    .catch((err) => {
+      console.log(">> Error while finding swimmerStat: ", err);
+    });
+};
+
+// Get all Swimmers include swimmerStats
+exports.findAll = () => {
+  return Swimmer.findAll({
+    include: ["swimmerStats"],
+  }).then((swimmers) => {
+    return swimmers;
+  });
+};
+
 
 
 
 // Retrieve all Swimmers from the database.
 exports.findAll = (req, res) => {
-    // const title = req.query.title;
-    // var condition = title ? { title: { [Op.iLike]: `%${title}%` } } : null;
+    // const first_name = req.query.first_name;
+    // var condition = first_name ? { first_name: { [Op.iLike]: `%${first_name}%` } } : null;
   
     // Swimmer.findAll({ where: condition })
     Swimmer.findAll()
@@ -100,6 +84,11 @@ exports.findAll = (req, res) => {
         });
       });
   };
+
+
+
+
+
 
 // Find a single Swimmer with an id
 exports.findOne = (req, res) => {
