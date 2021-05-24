@@ -1,8 +1,7 @@
 module.exports = (sequelize, Sequelize) => {
     const Swimmer = sequelize.define("swimmer", {
       first_name: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: Sequelize.STRING
       },
       last_name: {
         type: Sequelize.STRING
